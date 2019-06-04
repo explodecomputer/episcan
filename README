@@ -1,0 +1,16 @@
+episcan - Parallelise scans for pairwise epistasis across multi-core CPUs
+
+This software is a precurser of epiGPU, for all information on data handling see README.pdf bundled with epiGPU software.
+
+Analysis options are largely identical to epiGPU, the details for which can be seen in the README.pdf file as mentioned above. The exceptions are that the 'iteration size', 'safe mode' and 'device' flags are not applicable outside the GPU environment, and that episcan has the option to specify which chromosome by chromosome scan to perform. This could be useful for reducing the scan to batch jobs sent to a cluster.
+
+One further difference is that, unlike with epiGPU, analyses cannot be resumed if they are halted in episcan.
+
+The analysis performs an exhaustive 2D search for pairwise interactions across the genome by sequentially scanning all chromosome pairs for interactions. The parallelisation is handled by the OpenMP library, which creates a new thread for each core on the CPU. The scans are then distributed to cores according to their availability.
+
+Alternatively, episcan can be run serially (set -m flag to 0), whereby the analysis will only use a single CPU core.
+
+To compile, ensure the OpenMP library is installed, and from the extracted directory run:
+
+make
+
