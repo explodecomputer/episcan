@@ -226,13 +226,23 @@ int main(int argc, char **argv)
 			printf("%f\n",dat[i].phen);
 		}
 	}
+	printf("HELLOOOO\n");
 
 	if(UA)
 	{
 		if(UB)
 		{
 			printf("Performing scan on %s vs %s...\n\n",chrstat[UA-1].chrname, chrstat[UB-1].chrname);
-			tothits = squareomp(geno, dat, nid, UA-1, UB-1, chrstat, genmap, outfile);
+
+			if(UTEST == 'f')
+			{
+				printf("Performing 8df test\n");
+				tothits = squareomp(geno, dat, nid, UA-1, UB-1, chrstat, genmap, outfile);
+			} else{
+				printf("Performing 4df test\n");
+				tothits = squareompi(geno, dat, nid, UA-1, UB-1, chrstat, genmap, outfile);
+			}
+
 		} else {
 			printf("Only one chromosome specified!\n");
 			ARGS;
@@ -483,10 +493,10 @@ int squareomp(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *chr
 		{
 			if(tid == 0)
 			{
-				if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
-				{ 
-					printf("."); fflush(stdout);
-				}
+				// if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
+				// { 
+				// 	printf("."); fflush(stdout);
+				// }
 			}
 			
 			if(chr1 == chr2)
@@ -606,10 +616,10 @@ int squareompi(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *ch
 		{
 			if(tid == 0)
 			{
-				if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
-				{ 
-					printf("."); fflush(stdout);
-				}
+				// if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
+				// { 
+				// 	printf("."); fflush(stdout);
+				// }
 			}
 			
 			if(chr1 == chr2)
