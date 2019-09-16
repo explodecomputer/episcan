@@ -246,6 +246,7 @@ int main(int argc, char **argv)
 		fclose(FAM);
 		free(dat);
 		dat = dat2;
+		printf("done!\n\n");fflush(stdout);
 	}
 
 	if(UPERM > 0)
