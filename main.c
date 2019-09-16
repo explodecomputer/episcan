@@ -242,21 +242,10 @@ int main(int argc, char **argv)
 			(void)fscanf(FAM,"%d",&j);
 			(void)fscanf(FAM,"%f%*[ /t]",&dat2[i].phen);
 			dat2[i].sex = j;
-			if(i < 10)
-			{
-				printf("%s %s %s %s %d %f\n", dat2[i].family, dat2[i].id, dat2[i].paternal, dat2[i]. maternal, dat2[i].sex, dat2[i].phen);fflush(stdout);
-			}
-
 		}
 		fclose(FAM);
 		free(dat);
 		dat = dat2;
-	}
-
-
-	for(i = 0; i < 10; i++)
-	{
-		printf("%s %s %s %s %d %f\n", dat[i].family, dat[i].id, dat[i].paternal, dat[i]. maternal, dat[i].sex, dat[i].phen);fflush(stdout);
 	}
 
 	if(UPERM > 0)
