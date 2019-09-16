@@ -62,7 +62,6 @@ int main(int argc, char **argv)
 
 
 	char *binfile, *outfile, *famfile;
-	printf("a %d\n", famfile);fflush(stdout);
 
 	int nsnp, nid, npack, remain, nchr, tothits, UA, UB;
 	ped *dat;
@@ -79,7 +78,6 @@ int main(int argc, char **argv)
 	int *gpack;
 
 	timetaken = malloc(sizeof(char) * 50);
-	printf("a %d\n", famfile);fflush(stdout);
 
 	if(argc < 3)
 	{
@@ -102,7 +100,6 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	printf("a %d\n", famfile);fflush(stdout);
 
 	// DATA MODE
 	if(flag == 3)
@@ -119,7 +116,6 @@ int main(int argc, char **argv)
 		ARGS;
 		exit(1);
 	}
-	printf("a %d\n", famfile);fflush(stdout);
 
 	// begin timing
 	oval = time(NULL);
@@ -135,7 +131,7 @@ int main(int argc, char **argv)
 	UB = 0;
 	if(argc >= 4)
 	{
-		printf("a %d\n", famfile);fflush(stdout);
+
 		for(i = 4; i < argc; i+=2)
 		{
 			if(argv[i][0] != '-')
@@ -220,14 +216,11 @@ int main(int argc, char **argv)
 		}
 	}
 
-	printf("a %d\n", famfile);fflush(stdout);
 	// Read in epiGPU format binary file
 	readpackedbinary(&nid, &nsnp, &npack, &remain, &nchr, &genmap, &dat, &genop, &chrstat, binfile);
-	printf("a %d\n", famfile);fflush(stdout);
 	// Unpack genotypes to char - faster on CPU than packing
 	unpack(nid,nsnp,npack,remain,genop,&geno);
 	// Begin scan
-	printf("a %d\n", famfile);fflush(stdout);
 
 	ped *dat2;
 	if(famfile)
@@ -306,6 +299,8 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
+
 
 // Function to perform F test 
 // Input is preformatted
@@ -491,7 +486,7 @@ int squareomp(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *chr
 {
 	int nthreads, tid;
 	table *result;
-	int i,ii,j,jj,k,df1,df2,hitcount,burncount,nclean,dots;
+	int i,ii,j,jj,k,df1,df2,hitcount,burncount,nclean;
 	float F,*Y;
 	char fileomp[25],*X;
 	char *timetaken;
@@ -538,15 +533,7 @@ int squareomp(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *chr
 		// enter scan loop
 	
 		for(i = chrstat[chr1].chrstart; i < ii; i++)
-		{
-			if(tid == 0)
-			{
-				// if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
-				// { 
-				// 	printf("."); fflush(stdout);
-				// }
-			}
-			
+		{			
 			if(chr1 == chr2)
 			{
 				jj = i;
@@ -614,7 +601,7 @@ int squareompi(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *ch
 {
 	int nthreads, tid;
 	table *result;
-	int i,ii,j,jj,k,df1,df2,hitcount,burncount,nclean,dots;
+	int i,ii,j,jj,k,df1,df2,hitcount,burncount,nclean;
 	float F,Fi,*Y;
 	char fileomp[25],*X;
 	char *timetaken;
@@ -661,15 +648,7 @@ int squareompi(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *ch
 		// enter scan loop
 	
 		for(i = chrstat[chr1].chrstart; i < ii; i++)
-		{
-			if(tid == 0)
-			{
-				// if((dots++ % (int)(chrstat[chr1].chrsize/10)) == 0)
-				// { 
-				// 	printf("."); fflush(stdout);
-				// }
-			}
-			
+		{			
 			if(chr1 == chr2)
 			{
 				jj = i;

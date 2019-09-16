@@ -1,4 +1,4 @@
-#include "id4117.h"
+#include "episcan.h"
 
 void timediff(double *result, time_t time2, time_t time1)
 {

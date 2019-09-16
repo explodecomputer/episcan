@@ -1,5 +1,5 @@
 #include <math.h>
-#include "id4117.h"
+#include "episcan.h"
 #include "readplink.h"
 #include <omp.h>
 
