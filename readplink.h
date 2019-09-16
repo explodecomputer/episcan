@@ -63,4 +63,3 @@ void bit_print(int a);
 void extractfrombinary(char *binfile, char *pedfile, char *mapfile);
 char isbinary(int nid, ped *dat);
 void walkersalias(int n, float *p, int nans, int *ans);
-void readfam(int nid, ped *dat, char *FAM);

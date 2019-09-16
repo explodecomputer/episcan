@@ -62,6 +62,8 @@ int main(int argc, char **argv)
 
 
 	char *binfile, *outfile, *famfile;
+	printf("a %d\n", famfile);fflush(stdout);
+
 	int nsnp, nid, npack, remain, nchr, tothits, UA, UB;
 	ped *dat;
 	map *genmap;
@@ -77,6 +79,7 @@ int main(int argc, char **argv)
 	int *gpack;
 
 	timetaken = malloc(sizeof(char) * 50);
+	printf("a %d\n", famfile);fflush(stdout);
 
 	if(argc < 3)
 	{
@@ -99,6 +102,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
+	printf("a %d\n", famfile);fflush(stdout);
 
 	// DATA MODE
 	if(flag == 3)
@@ -115,6 +119,7 @@ int main(int argc, char **argv)
 		ARGS;
 		exit(1);
 	}
+	printf("a %d\n", famfile);fflush(stdout);
 
 	// begin timing
 	oval = time(NULL);
@@ -130,6 +135,7 @@ int main(int argc, char **argv)
 	UB = 0;
 	if(argc >= 4)
 	{
+		printf("a %d\n", famfile);fflush(stdout);
 		for(i = 4; i < argc; i+=2)
 		{
 			if(argv[i][0] != '-')
@@ -142,6 +148,7 @@ int main(int argc, char **argv)
 				case 'f' :
 					famfile = argv[i+1];
 					printf("Using %s as fam file\n", famfile);
+					break;
 				case 'p' :
 					j = 0; k = 0;
 					while(argv[i+1][j])
@@ -213,16 +220,50 @@ int main(int argc, char **argv)
 		}
 	}
 
+	printf("a %d\n", famfile);fflush(stdout);
 	// Read in epiGPU format binary file
 	readpackedbinary(&nid, &nsnp, &npack, &remain, &nchr, &genmap, &dat, &genop, &chrstat, binfile);
+	printf("a %d\n", famfile);fflush(stdout);
 	// Unpack genotypes to char - faster on CPU than packing
 	unpack(nid,nsnp,npack,remain,genop,&geno);
 	// Begin scan
+	printf("a %d\n", famfile);fflush(stdout);
 
-	// if(FAM != '')
-	// {
-	// 	readfam(nid, &dat, FAM);
-	// }
+	ped *dat2;
+	if(famfile)
+	{
+		FILE *FAM;
+
+		dat2 = (ped *)malloc(sizeof(ped) * (nid));
+
+		FAM = fopen(famfile,"r");
+		printf("Reading in %s.",famfile);fflush(stdout);
+		for(i = 0; i < nid; i++)
+		{
+			if(i % ((int)nid/10) == 1) {printf(".");fflush(stdout);}
+			(void)fscanf(FAM,"%s",dat2[i].family);
+			(void)fscanf(FAM,"%s",dat2[i].id);
+			(void)fscanf(FAM,"%s",dat2[i].paternal);
+			(void)fscanf(FAM,"%s",dat2[i].maternal);
+			(void)fscanf(FAM,"%d",&j);
+			(void)fscanf(FAM,"%f%*[ /t]",&dat2[i].phen);
+			dat2[i].sex = j;
+			if(i < 10)
+			{
+				printf("%s %s %s %s %d %f\n", dat2[i].family, dat2[i].id, dat2[i].paternal, dat2[i]. maternal, dat2[i].sex, dat2[i].phen);fflush(stdout);
+			}
+
+		}
+		fclose(FAM);
+		free(dat);
+		dat = dat2;
+	}
+
+
+	for(i = 0; i < 10; i++)
+	{
+		printf("%s %s %s %s %d %f\n", dat[i].family, dat[i].id, dat[i].paternal, dat[i]. maternal, dat[i].sex, dat[i].phen);fflush(stdout);
+	}
 
 	if(UPERM > 0)
 	{
@@ -234,7 +275,6 @@ int main(int argc, char **argv)
 			printf("%f\n",dat[i].phen);
 		}
 	}
-	printf("HELLOOOO\n");
 
 	if(UA)
 	{
