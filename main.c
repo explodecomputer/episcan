@@ -45,7 +45,8 @@ char *instructions =
 	"F [n]\tF value threshold for full test, default [n] = 6.5\n" \
 	"I [n]\tF value threshold for interaction test, default [n] = 10.5\n" \
 	"1 [n]\tSpecify which chr x chr scan to perform (chromosome 1)\n" \
-	"2 [n]\tChromosome 2\n\n" \
+	"2 [n]\tChromosome 2\n" \
+	"T [n]\tNumber of threads (default = maximum available)\n" \
 	"f [s]\tPath to fam file which has a different phenotype to the one in the epigpu file\n\n" \
 	"Example:\n" \
 	"<epiMP> -A [ epigpu file ] [ output file ]\n" \
@@ -71,6 +72,7 @@ int main(int argc, char **argv)
 	char *geno;
 	chromosome *chrstat;
 	int i,j,k;
+	int nthreads;
 	
 	//plinkbin
 	int flag;
@@ -145,6 +147,11 @@ int main(int argc, char **argv)
 				case 'f' :
 					famfile = argv[i+1];
 					printf("Using %s as fam file\n", famfile);
+					break;
+				case 'T' :
+					nthreads = atoi(argv[i+1]);
+					printf("Using %d threads\n", nthreads);
+					omp_set_num_threads(nthreads);
 					break;
 				case 'p' :
 					j = 0; k = 0;
