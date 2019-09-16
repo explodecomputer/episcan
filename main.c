@@ -46,6 +46,7 @@ char *instructions =
 	"I [n]\tF value threshold for interaction test, default [n] = 10.5\n" \
 	"1 [n]\tSpecify which chr x chr scan to perform (chromosome 1)\n" \
 	"2 [n]\tChromosome 2\n\n" \
+	"f [s]\tPath to fam file which has a different phenotype to the one in the epigpu file\n\n" \
 	"Example:\n" \
 	"<epiMP> -A [ epigpu file ] [ output file ]\n" \
 	"<epiMP> -A [ epigpu file ] [ output file ] -1 5 -2 23\n" \
