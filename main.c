@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 	time_t oval,nval;
 
 
-	char *binfile, *outfile;
+	char *binfile, *outfile, *famfile;
 	int nsnp, nid, npack, remain, nchr, tothits, UA, UB;
 	ped *dat;
 	map *genmap;
@@ -128,7 +128,6 @@ int main(int argc, char **argv)
 	UTEST = 'f';
 	UA = 0;
 	UB = 0;
-	FAM = '';
 	if(argc >= 4)
 	{
 		for(i = 4; i < argc; i+=2)
@@ -141,8 +140,8 @@ int main(int argc, char **argv)
 			switch(argv[i][1])
 			{
 				case 'f' :
-					FAM = argv[i+1];
-					printf("Using %s as fam file\n", FAM);
+					famfile = argv[i+1];
+					printf("Using %s as fam file\n", famfile);
 				case 'p' :
 					j = 0; k = 0;
 					while(argv[i+1][j])
@@ -220,10 +219,10 @@ int main(int argc, char **argv)
 	unpack(nid,nsnp,npack,remain,genop,&geno);
 	// Begin scan
 
-	if(FAM != '')
-	{
-		readfam(nid, &dat, FAM);
-	}
+	// if(FAM != '')
+	// {
+	// 	readfam(nid, &dat, FAM);
+	// }
 
 	if(UPERM > 0)
 	{
