@@ -352,17 +352,26 @@ void ftest8df(char *X, float *Y, int n, float *F, int *df1, int *df2)
 	*F = MSB / MSW;
 }
 
+
 void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 {
-	int i, nfac, factor_count[9];
-	float MSB, MSW, SSB = 0, SSW = 0, SSI = 0, SSD, mY = 0;
+	int i, nfac, factor_count[9], col_count[3], row_count[3];
+	float MSB, MSW, SSB = 0, SSW = 0, SSI = 0, SSD, mY = 0, SSM1 = 0, SSM2 = 0, SSM = 0;
 	float mY_fac[9];
 	float mean_row[3], mean_col[3];
+
+	// Initialise vectors
 
 	for(i = 0; i < 9; i++)
 	{
 		factor_count[i] = 0;
 		mY_fac[i] = 0;
+	}
+
+	for(i = 0; i < 3; i++)
+	{
+		row_count[i] = 0;
+		col_count[i] = 0;
 	}
 	
 	// calculate class means
@@ -372,15 +381,21 @@ void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 		mY += Y[i];
 		factor_count[(int)X[i]]++;
 		mY_fac[(int)X[i]] += Y[i];
+		row_count[(int)X[i] % 3]++;
+		col_count[(int)floor((double)X[i] / 3)]++;
 	}
 
 	mY = mY / n;
 
 
+
+	// marginal summaries
 	for(i = 0; i < 3; i++)
 	{
-		mean_col[i] = (mY_fac[i]+mY_fac[i+3]+mY_fac[i+6]) / (factor_count[i]+factor_count[i+3]+factor_count[i+6]);
-		mean_row[i] = (mY_fac[3*i]+mY_fac[3*i+1]+mY_fac[3*i+2]) / (factor_count[3*i]+factor_count[3*i+1]+factor_count[3*i+2]);
+		col_count[i] = factor_count[i]+factor_count[i+3]+factor_count[i+6];
+		row_count[i] = factor_count[3*i]+factor_count[3*i+1]+factor_count[3*i+2];
+		mean_col[i] = (mY_fac[i]+mY_fac[i+3]+mY_fac[i+6]) / col_count[i];
+		mean_row[i] = (mY_fac[3*i]+mY_fac[3*i+1]+mY_fac[3*i+2]) / row_count[i];
 	}
 
 
@@ -393,9 +408,17 @@ void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 			nfac++;
 			mY_fac[i] /= factor_count[i];
 			SSB += factor_count[i] * pow(mY_fac[i] - mY, 2);
-			SSI += factor_count[i] * pow(mY_fac[i] - mean_row[(int)(i/3)] - mean_col[i%3] + mY, 2);
 		}
 	}
+
+	// calculate SSM
+	for(i = 0; i < 3; i++)
+	{
+		SSM1 += col_count[i] * pow(mean_col[i] - mY, 2);
+		SSM2 += row_count[i] * pow(mean_row[i] - mY, 2);
+	}
+
+	SSM = SSM1 + SSM2;
 
 	// calculate SSW
 	for (i = 0; i < n; i++)
@@ -403,15 +426,21 @@ void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 		SSW += pow(Y[i] - mY, 2);
 	}
 
+	SSI = SSB - SSM;
+
 	*df1 = nfac - 1;
 	*df2 = n - nfac;
 	SSD = SSW - SSB;
+
 
 	MSB = SSB / *df1;
 	MSW = SSD / *df2;
 	*F = MSB / MSW;
 	*Fi = (SSI/4) / MSW;
+	printf("%f", *Fi);
+
 }
+
 
 
 void permute(int nid, ped *dat)
@@ -611,6 +640,7 @@ int squareompi(char *geno, ped *dat, int nid, int chr1, int chr2, chromosome *ch
 	timetaken = (char *)malloc(sizeof(char) * 50);
 	
 
+	printf("Threshold: %f %f\n", UTHRESHOLD1, UTHRESHOLD2);
 	hitcount = 0;
 	ii = chrstat[chr1].chrsize + chrstat[chr1].chrstart;
 
