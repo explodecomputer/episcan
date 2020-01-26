@@ -387,8 +387,6 @@ void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 
 	mY = mY / n;
 
-
-
 	// marginal summaries
 	for(i = 0; i < 3; i++)
 	{
@@ -437,8 +435,6 @@ void ftest4df(char *X, float *Y, int n, float *F, float *Fi, int *df1, int *df2)
 	MSW = SSD / *df2;
 	*F = MSB / MSW;
 	*Fi = (SSI/4) / MSW;
-	printf("%f", *Fi);
-
 }
 
 
