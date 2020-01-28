@@ -14,3 +14,9 @@ To compile, ensure the OpenMP library is installed, and from the extracted direc
 
 make
 
+
+==
+
+module add libraries/gnu_builds/gsl-1.16
+gcc -Wall -lgsl -lgslcblas -lm lm.c
+
